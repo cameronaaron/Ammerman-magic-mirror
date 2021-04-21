@@ -8,6 +8,7 @@
 
 #get_ipython().run_line_magic('matplotlib', 'inline')
 import seaborn as sns
+import sys
 sns.set_style('darkgrid')
 sns.color_palette('Spectral')
 import matplotlib.pyplot as plt
@@ -20,12 +21,20 @@ import cv2
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
 from lineage import Lineage
+from tkinter import *
+from tkinter.ttk import *
+from tkinter.filedialog import askopenfile
+import tkinter as tk
+from tkinter import filedialog
 
+root = tk.Tk()
+root.withdraw()
 
-# In[2]:
+file_path = filedialog.askopenfilename()
+data = pd.read_csv(file_path, sep='\t', dtype={'rsid':'str', 'chromosome':'object', 'position':'int', 'genotype':'str'}, comment='#')
 
-
-data = pd.read_csv('genomee.txt', sep='\t', dtype={'rsid':'str', 'chromosome':'object', 'position':'int', 'genotype':'str'}, comment='#')
+btn = Button(root, text ='Open', command = lambda:open_file())
+btn.pack(side = TOP, pady = 10)
 
 
 # In[3]:
@@ -216,17 +225,299 @@ print (genes_to_display.summary.values)
 
 
 # In[32]:
-
-
-from wordcloud import WordCloud, STOPWORDS
-import matplotlib.pyplot as plt
 text = genes_to_display.summary.values
+stop_words = ["Abscess",
+"Acute Radiation Sickness",
+"Alzheimers",
+"Alzheimer",
+"likely",
+"met",
+"disease",
+"Anthrax",
+"Appendicitis",
+"Allergy",
+"Arthritis",
+"Aseptic meningitis",
+"Asthma",
+"Astigmatism",
+"Atherosclerosis",
+"B",
+"Bacterial meningitis",
+"Beriberi",
+"Black Death",
+"Botulism",
+"Breast cancer",
+"Bronchitis",
+"Brucellosis",
+"Bubonic plague",
+"Bunion",
+"Boil",
+"C",
+"Campylobacter infection",
+"Cancer",
+"Candidiasis",
+"Carbon monoxide poisoning",
+"Coeliac disease",
+"Cerebral palsy",
+"Chagas disease",
+"Chickenpox",
+"Chlamydia",
+"Chlamydia trachomatis",
+"Cholera",
+"Chordoma",
+"Chorea",
+"Chronic fatigue syndrome",
+"Circadian rhythm sleep disorder",
+"Colitis",
+"Common cold",
+"Condyloma",
+"Congestive heart disease",
+"Coronary heart disease",
+"COVID-19",
+"Cowpox",
+"Crohn's Disease",
+"Coronavirus",
+"D",
+"Dengue Fever",
+"Diabetes mellitus",
+"Diphtheria",
+"Dehydration",
+"Dysentery",
+"E",
+"Ear infection",
+"Ebola",
+"Encephalitis",
+"Emphysema",
+"Epilepsy",
+"Erectile dysfunction",
+"F",
+"Fibromyalgia",
+"Foodborne illness",
+"G",
+"normal",
+"prp",
+"cjd",
+"Normal",
+"val",
+"vcjd",
+"Gangrene",
+"Gastroenteritis",
+"Genital herpes",
+"GERD",
+"Goitre",
+"Gonorrhea",
+"H",
+"Heart disease",
+"Hepatitis A",
+"Hepatitis B",
+"Hepatitis C",
+"Hepatitis D",
+"Hepatitis E",
+"Histiocytosis (childhood cancer)",
+"HIV",
+"Human papillomavirus",
+"Huntington's disease",
+"Hypermetropia",
+"Hyperopia",
+"Hyperthyroidism",
+"Hypothyroid",
+"Hypotonia",
+"I",
+"Impetigo",
+"Infertility",
+"Influenza",
+"Interstitial cystitis",
+"Iritis",
+"Iron-deficiency anemia",
+"Irritable bowel syndrome",
+"Ignious Syndrome",
+"Intestine ache",
+"Intestine Gas",
+"Intestine disease",
+"Upset Intestine",
+"J",
+"Jaundice",
+"K",
+"Keloids",
+"Kuru",
+"Kwashiorkor",
+"Kidney stone disease",
+"L",
+"Laryngitis",
+"Lead poisoning",
+"Legionellosis",
+"Leishmaniasis",
+"Leprosy",
+"Leptospirosis",
+"Listeriosis",
+"Leukemia",
+"Lice",
+"Loiasis",
+"Lung cancer",
+"Lupus erythematosus",
+"Lyme disease",
+"Lymphogranuloma venereum",
+"Lymphoma",
+"Limbtoosa",
+"M",
+"Mad cow disease",
+"Malaria",
+"Marburg fever",
+"Measles",
+"Melanoma",
+"Metastatic cancer",
+"Meniere's disease",
+"Meningitis",
+"Migraine",
+"Mononucleosis",
+"Multiple myeloma",
+"Multiple sclerosis",
+"Mumps",
+"Muscular dystrophy",
+"Myasthenia gravis",
+"Myelitis",
+"Cancer",
+"Cancer'",
+"Increased",
+"'",
+"Myoclonus",
+"Myopia",
+"Myxedema",
+"Morquio Syndrome",
+"Mattticular syndrome",
+"Mononucleosis",
+"N",
+"Neoplasm",
+"Non-gonococcal urethritis",
+"Necrotizing Fasciitis",
+"Night blindness",
+"O",
+"Obesity",
+"Osteoarthritis",
+"Osteoporosis",
+"Otitis",
+"P",
+"Cancer's",
+"Palindromic rheumatism",
+"Paratyphoid fever",
+"Parkinson's disease",
+"Pelvic inflammatory disease",
+"Peritonitis",
+"Periodontal disease",
+"Pertussis",
+"Phenylketonuria",
+"Plague",
+"Poliomyelitis",
+"Porphyria",
+"Progeria",
+"Prostatitis",
+"Psittacosis",
+"Psoriasis",
+"Pubic lice",
+"Pulmonary embolism",
+"Pilia",
+"pneumonia",
+"Q",
+"Q fever",
+"Ques fever",
+"R",
+"Rabies",
+"Repetitive strain injury",
+"Rheumatic fever",
+"Rheumatic heart",
+"Rheumatism",
+"Rheumatoid arthritis",
+"Rickets",
+"Rift Valley fever",
+"Rocky Mountain spotted fever",
+"Rubella",
+"S",
+"Salmonellosis",
+"Scabies",
+"Scarlet fever",
+"Sciatica",
+"Scleroderma",
+"Scrapie",
+"Scurvy",
+"Sepsis",
+"Septicemia",
+"SARS",
+"Shigellosis",
+"Shin splints",
+"Shingles",
+"Sickle-cell anemia",
+"Siderosis",
+"SIDS",
+"Silicosis",
+"Smallpox",
+"Stevens–Johnson syndrome",
+"Stomach flu",
+"Stomach ulcers",
+"Strabismus",
+"Strep throat",
+"Streptococcal infection",
+"Synovitis",
+"Syphilis",
+"Swine influenza",
+"Schizophrenia",
+"Stomach Gas",
+"Stomach Ache",
+"stomach Disease",
+"Kids Stomach Ache",
+"Upset Stomach",
+"T",
+"Taeniasis",
+"Tay-Sachs disease",
+"Tennis elbow",
+"Teratoma",
+"Tetanus",
+"Thalassaemia",
+"Thrush",
+"Thymoma",
+"Tinnitus",
+"Tonsillitis",
+"Tooth decay",
+"Toxic shock syndrome",
+"Trichinosis",
+"Trichomoniasis",
+"Trisomy",
+"Tuberculosis",
+"Tularemia",
+"Tungiasis",
+"Typhoid fever",
+"Typhus",
+"Tumor",
+"U",
+"Ulcerative colitis",
+"Ulcers",
+"Uremia",
+"Urticaria",
+"Uveitis",
+"UTI'S",
+"V",
+"risk",
+"Varicella",
+"Varicose veins",
+"Vasovagal syncope",
+"Vitiligo",
+"Von Hippel-Lindau disease",
+"Viral fever",
+"Viral meningitis",
+"W",
+"Warkany syndrome",
+"Warts",
+"Watkins",
+"Y",
+"Yellow fever",
+"Yersiniosis"] + list(STOPWORDS)
+
 wordcloud = WordCloud(
     width = 800,
     height = 600,
     mode = 'RGBA',
     background_color = None,
-    stopwords = STOPWORDS).generate(str(text))
+    stopwords = stop_words).generate(str(text))
+
 fig = plt.figure(
     figsize = (90, 80),
     edgecolor = 'k')
@@ -235,35 +526,6 @@ plt.axis('off')
 plt.tight_layout(pad=0)
 plt.show()
 wordcloud.to_file("wordcloud.png")
-
-# In[33]:
-
-'''
-from PIL import Image
-
-img = Image.open("wordcloud.png")
-img = img.convert("RGBA")
-datas = img.getdata()
-
-newData = []
-for item in datas:
-    if item[0] == 255 and item[1] == 255 and item[2] == 255:
-        newData.append((255, 255, 255, 0))
-    else:
-        if item[0] > 150:
-            newData.append((0, 0, 0, 255))
-        else:
-            newData.append(item)
-            print(item)
-
-
-img.putdata(newData)
-img.save("wordcloud.png", "PNG")
-'''
-
-# In[ ]:
-
-
 deviceId = 0
 faceCascade = cv2.CascadeClassifier("cascadeFiles/haarcascade_frontalface_default.xml")
 noseCascade = cv2.CascadeClassifier("reference/haarcascade_mcs_nose.xml")
@@ -383,111 +645,3 @@ while(cv2.waitKey(30) != 27):
         break
 video_capture.release()
 cv2.destroyAllWindows()
-
-'''
-# In[ ]:
-
-
-l = Lineage()
-
-
-# In[ ]:
-
-
-Mom = l.create_individual('mom', 'mom.txt')
-
-
-# In[ ]:
-
-
-Mom
-
-
-# In[ ]:
-
-
-Mom.build
-
-
-# In[ ]:
-
-
-Me = l.create_individual('me', 'genomeeline.txt')
-
-
-# In[ ]:
-
-
-Me.build
-
-
-# In[ ]:
-
-
-discordant_snps = l.find_discordant_snps(Me, Mom, save_output=True)
-
-
-# In[ ]:
-
-
-len(discordant_snps.loc[discordant_snps['chrom'] != 'MT'])
-
-
-# In[ ]:
-
-
-results = l.find_shared_dna([Mom, Me], cM_threshold=0.75, snp_threshold=1100)
-
-
-# In[ ]:
-
-
-sorted(results.keys())
-
-
-# In[ ]:
-
-
-len(results['one_chrom_shared_dna'])
-
-
-# In[ ]:
-
-
-results1 = l.find_shared_dna([Mom, Me], shared_genes=True)
-
-
-# In[ ]:
-
-
-len(results1['two_chrom_shared_genes'])
-
-
-# In[ ]:
-
-
-from arv import load, unphased_match as match
-
-genome = load("genomee.txt")
-
-print("You are {gender}. You are {athletic}. you tend to {sneezesun} when it is too sunny outside. you have {color} eyes,  {hair} hair. You are likely {bodytype} and still struggles with {OCD}. you {likelyhiv}. you are {social} and {popularity}, and {organization}. You are an extremely {drive}. You are quite a {empathy}. You are {likelylynch}. You are {lactoseint}."
-.format(
-  gender     = "man" if genome.y_chromosome else "woman",
-  athletic   = "Incredibly athletic and likely a sprinter" if genome["rs1815739"] == "CC" else "not athletic",
-  sneezesun  ="Sneeze" if genome["rs10427255"] == "CC" else "not sneeze",
-  social     ="Very social " if genome["rs53576"] == "AA" or "AG" else "not very social",
-  hair       ="curly" if genome["rs17646946"] == "GG" else "not curly",
-  bodytype   ="Muscular" if genome["rs1815739"] == "CC" else "not Muscular",
-  organization ="organized" if genome["rs25532"] == "CC" or "CT" else "Not organizations",
-  likelyhiv  ="Hiv resistant" if genome["i3003626"] == "DD" else "are not hiv resistant ",
-  empathy     ="Very empathetic " if genome["rs53576"] == "AA" or "AG" else "not very empathetic",
-  popularity ="very popular" if genome["rs53576"] == "AA" or "AG" else "not very popular",
-  drive      ="very driven" if genome["rs1815739"] == "AA" else "not very driven",
-  OCD        ="OCD" if genome["rs25532"] == "CC" or "CT" else "Not ocd",
-  likelylynch="Have Lynch syndrome" if genome["rs63750875"] == "CC" or "CG" else "dont have lynch syndrome",
-  lactoseint ="lactose intolerent" if genome["rs4988235"] == "CC"  else "not lactose intolerant",
-  complexion = "light" if genome["rs1426654"] == "AA" else "dark",
-  color      = match(genome["rs12913832"], {"AA": "brown",
-                                            "AG": "brown or green",
-                                            "GG": "blue"})))
-'''
