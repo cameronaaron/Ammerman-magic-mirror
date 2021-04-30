@@ -26,15 +26,16 @@ from tkinter.ttk import *
 from tkinter.filedialog import askopenfile
 import tkinter as tk
 from tkinter import filedialog
-
-root = tk.Tk()
-root.withdraw()
-
-file_path = filedialog.askopenfilename()
-data = pd.read_csv(file_path, sep='\t', dtype={'rsid':'str', 'chromosome':'object', 'position':'int', 'genotype':'str'}, comment='#')
-
-btn = Button(root, text ='Open', command = lambda:open_file())
-btn.pack(side = TOP, pady = 10)
+Fileexistprompt=input('Do you have a 23andme file?').lower()
+if Fileexistprompt == 'yes':
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename()
+    data = pd.read_csv(file_path, sep='\t', dtype={'rsid':'str', 'chromosome':'object', 'position':'int', 'genotype':'str'}, comment='#')
+    btn = Button(root, text ='Open', command = lambda:open_file())
+    btn.pack(side = TOP, pady = 10)
+elif Fileexistprompt == 'no':
+    data = pd.read_csv("dnafiles/genomee.txt", sep='\t', dtype={'rsid':'str', 'chromosome':'object', 'position':'int', 'genotype':'str'}, comment='#')
 
 
 # In[3]:
