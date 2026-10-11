@@ -1,0 +1,30 @@
+# 23andMe internal-id  →  dbSNP RSID crosswalk
+# ---------------------------------------------------------------------------
+# 23andMe's chip reports some markers under proprietary "i" identifiers instead
+# of standard Reference SNP cluster IDs (RSIDs).  SNPedia and GWAS datasets are
+# keyed on RSIDs, so an "i"-only marker never matches unless it is translated.
+#
+# The complete i -> rs crosswalk has never been published by 23andMe, so this
+# table is intentionally PARTIAL and community-extensible.  The resolver applies
+# only what is listed here and leaves every other "i" id untouched — it never
+# guesses.  See magic_mirror/iids.py.
+#
+# FORMAT   one mapping per line, tab- or comma-separated:
+#
+#     i713426<TAB>rs2942
+#
+# Lines starting with "#" and blank lines are ignored.  Both columns are
+# lower-cased on load.  Only clean "i<digits>" -> "rs<digits>" rows are kept.
+#
+# HOW TO ADD AN ENTRY
+#   1. Open the marker's SNPedia page (https://www.snpedia.com/index.php/i713426).
+#      Many "i" pages state their rs equivalent ("Make rs... ...") or redirect
+#      to the rs page.
+#   2. Confirm the chromosome + build-37 position matches your genome file's
+#      row for that "i" id before trusting the mapping.
+#   3. Append "i<id><TAB>rs<id>" below.
+#
+# Run `magic-mirror resolve` to see how many "i" markers in your genome this
+# table currently covers and which remain unresolved.
+#
+# iid    rsid

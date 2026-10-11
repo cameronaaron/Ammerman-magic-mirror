@@ -1,0 +1,19 @@
+version = 1
+
+[[annotations]]
+path = ["**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Cameron Aaron"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "result.csv"
+precedence = "override"
+SPDX-FileCopyrightText = "SNPedia contributors <https://www.snpedia.com/>"
+SPDX-License-Identifier = "CC-BY-NC-SA-3.0"
+
+[[annotations]]
+path = "cascadeFiles/haarcascade_frontalface_default.xml"
+precedence = "override"
+SPDX-FileCopyrightText = "2000 Intel Corporation"
+SPDX-License-Identifier = "LicenseRef-OpenCV-Intel"

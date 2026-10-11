@@ -1,0 +1,13 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "genome-core"
+description = "Native (Rust) genome parser for magic_mirror."
+requires-python = ">=3.10"
+classifiers = ["Programming Language :: Rust"]
+dynamic = ["version"]
+
+[tool.maturin]
+module-name = "genome_core"

@@ -1,0 +1,12 @@
+[package]
+name = "genome-core"
+version.workspace = true
+edition.workspace = true
+description = "Portable genome parsing + SNPedia trait-building (shared by Python bindings and the CF Worker)."
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+csv = "1"
+
+[lib]
+crate-type = ["rlib"]

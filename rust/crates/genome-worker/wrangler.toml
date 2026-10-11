@@ -1,0 +1,13 @@
+name = "genetic-reflexions"
+main = "build/worker/shim.mjs"
+compatibility_date = "2024-11-01"
+
+# workers-rs compiles the crate to WASM and generates the JS shim.
+# (Prepend the rustup bin so the wasm32 target is found even if a non-rustup
+#  rustc is earlier on PATH.)
+[build]
+command = "PATH=\"$HOME/.cargo/bin:$PATH\" worker-build --release"
+
+# 23andMe/AncestryDNA uploads run ~15 MB; allow a generous body.
+[limits]
+cpu_ms = 50

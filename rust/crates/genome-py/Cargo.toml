@@ -1,0 +1,14 @@
+[package]
+name = "genome-py"
+version.workspace = true
+edition.workspace = true
+description = "PyO3 bindings exposing genome-core to Python as the `genome_core` module."
+
+[lib]
+name = "genome_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Aliased because this crate's own lib is named `genome_core` (the Python module).
+gcore = { package = "genome-core", path = "../genome-core" }
+pyo3 = { version = "0.29", features = ["extension-module"] }
